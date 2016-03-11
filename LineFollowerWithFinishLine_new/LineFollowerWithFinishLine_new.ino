@@ -20,7 +20,7 @@
 #define QTR_THRESHOLD 400
 #define TRUE 1
 #define FALSE 0
-#define MAX_SPEED 341
+#define MAX_SPEED 400
 
 
 
@@ -31,7 +31,7 @@ ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON);
 int lastError = 0;
 bool flag = TRUE;
-int error_divider;
+int error_divider, while_flag=0;
 
 
 
@@ -42,14 +42,18 @@ int error_divider;
 
 void setup()
 {
-
+  //at this point the value of the error_divider is setted according to the MAX_SPEED value.
   if(MAX_SPEED <= 300){
     error_divider=4;
+    //if the MAX_SPEED is less than 300 the zumo will reach the finish line.
     flag=FALSE;
-  }else if(MAX_SPEED >300 && MAX_SPEED<340){
+
+    //if MAX_SPEED is between 300 and 340 the zumo will follow the line and it depends on the charge of batteries and luck if he will reach the finish line
+  }else if(MAX_SPEED >300 && MAX_SPEED<=340){
     error_divider=7;
     flag=TRUE;
-  }else{
+    // it is sure that the zumo will fail.
+  }else if(MAX_SPEED >340){
     error_divider=9;
     flag=TRUE;
   }
@@ -58,7 +62,7 @@ void setup()
 
   // Initialize the reflectance sensors module
   reflectanceSensors.init();
-
+  
   // Wait for the user button to be pressed and released
   button.waitForButton();
 
@@ -94,6 +98,9 @@ void setup()
   // Play music and wait for it to finish before we start driving.
   buzzer.play("L16 cdegreg4");
   while(buzzer.isPlaying());
+
+  
+  
 }
 
 void loop()
@@ -154,21 +161,28 @@ void loop()
     motors.setSpeeds(MAX_SPEED, MAX_SPEED);
     delay(100);
   }
+  //if it enters in this if it means that the robot went out of track.
   if(sensors[0] < QTR_THRESHOLD && sensors[1]< QTR_THRESHOLD && sensors[2] < QTR_THRESHOLD && sensors[3] < QTR_THRESHOLD && sensors[4] < QTR_THRESHOLD && sensors[5] < QTR_THRESHOLD){
     while(flag){
-      motors.setSpeeds(0, 0);
-      button.waitForButton();
-    }
-    /*while(flag){
-      button.waitForButton();
-      
       motors.setSpeeds(MAX_SPEED, MAX_SPEED);
       delay(500);
-      motors.setSpeeds(-MAX_SPEED, MAX_SPEED);
-      delay(200);
-      motors.setSpeeds(-MAX_SPEED, -MAX_SPEED);
-      delay(500);
-    }*/
+      flag=FALSE;
+      while_flag=1;
+    }
+    if(while_flag)
+      flag=TRUE;
+      
+    while(flag){
+      motors.setSpeeds(0, 0);
+      //if the button is pressed and the zumo is putted again in the track it will follow the line.
+      button.waitForButton();
+      flag=FALSE;
+      while_flag=1;
+    }
+    if(while_flag)
+      flag=TRUE;
+
+    while_flag=0;
+    
   }
-  
 }
