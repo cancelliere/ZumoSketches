@@ -78,7 +78,7 @@ Pushbutton button(ZUMO_BUTTON);
 
 // path[] keeps a log of all the turns made
 // since starting the maze
-char path[100] = "";
+char path[1000] = "";
 unsigned char path_length = 0; // the length of the path
 
 void setup()
