@@ -4,19 +4,17 @@
 #include <Pushbutton.h>
 #include <ZumoBuzzer.h>
 
-#define W_OFFSET 4480
+#define W_OFFSET 1120
+#define POWER_OF_TWO 64
 #define SAMPLING_TIME 11
 #define TURN_SPEED 25
 #define STRAIGHT_SPEED 200
 #define TURN_ANGLE 90000
 #define THRESHOLD 125
 #define STRAIGHT_TH 125
-#define STEP_LENGTH 500
 #define CORRECTION_FACTOR 20
 #define STRAIGHT_DURATION 500
 #define COMMANDS_NUM 10
-
-#define LDR_THRESHOLD 150
 
 #define FRONT_LDR 4
 #define BACK_LDR 0
@@ -34,12 +32,12 @@ Pushbutton stopButton(11);
 L3G gyro;
 
 int reading; // numerical value from gyro
-float angularReading; // conversion from "reading" to angular Velocity
-float currentAngle = 0; // integration over time
+long angularReading; // conversion from "reading" to angular Velocity
+long currentAngle = 0; // integration over time
 long currentOffset = 0; // to check if the defined offset is correct
 int offset = W_OFFSET;
-float absoluteAngle = 0; // absolute angular position relative to the starting point
-float stepDeviation = 0;
+long absoluteAngle = 0; // absolute angular position relative to the starting point
+int stepDeviation = 0;
 long targetAngle; // ideal angular position to reach
 byte commandList[COMMANDS_NUM];
 unsigned int sensorTh[4];
@@ -70,7 +68,7 @@ void setup() {
   
   LDRcalibration2();
 
-  delay(500);
+  delay(1000);
 }
 
 void loop() {
@@ -158,6 +156,49 @@ void LDRcalibration2() {
   buzzer.playNote (NOTE_A(3), 125, 15); 
   
   return;
+}
+
+
+
+
+
+void LDRcalibration() {
+  int readings[4];
+  /*        0
+   *    1        2
+   *         3
+   */
+
+  //find min reading for each sensor when lit
+ for (int i=0; i<4; i++) {
+   readings[i] = 1024;    //set to maximum
+ }
+
+ buzzer.playNote (NOTE_A(4), 125, 15);
+ digitalWrite(LED_PIN, HIGH);  
+ for (int cycle = 0; cycle < 50; cycle ++ ) {
+  readings[0] = min(readings[0], analogRead(FRONT_LDR));
+  readings[1] = min(readings[1], analogRead(SX_LDR));
+  readings[2] = min(readings[2], analogRead(RX_LDR));
+  readings[3] = min(readings[3], analogRead(BACK_LDR));
+  
+  delay(50);
+ }
+ digitalWrite(LED_PIN, LOW);
+
+  //store the minimum found in the previous cycle
+  sensorTh[0] = readings[0] * 4/5; // different proportions to adapt it to the soldered board
+  sensorTh[2] = readings[2] * 4/5; // it may need some modifications for the other boards
+  sensorTh[1] = readings[1] * 3/5;
+  sensorTh[3] = readings[3] * 3/5;
+
+ for (int i=0; i<4; i++) {
+    Serial.print(sensorTh[i]);
+    Serial.print(" ");
+  }
+
+  delay(250);
+  buzzer.playNote (NOTE_A(4), 125, 15); 
 }
 
 
@@ -266,7 +307,7 @@ void straight (int dir) {
       
       for (int i=0; i<10; i++) {
         gyro.read();
-        reading = (gyro.g.z >>8) <<8; // remove static noise
+        reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
         currentAngle += angularReading * SAMPLING_TIME / 1000.0; // sampling time is in ms
         delay(10);
@@ -305,8 +346,8 @@ void straight (int dir) {
         
       }
       
-      /*Serial.print(" - L: ");
-      Serial.println(leftCorrection);*/
+      Serial.print(" - L: ");
+      Serial.println(leftCorrection);
     }
 
     motors.setSpeeds( 0, 0);
@@ -314,7 +355,7 @@ void straight (int dir) {
     absoluteAngle = targetAngle+stepDeviation;
 
     Serial.print ("Deviation from straight: ");
-    Serial.print(absoluteAngle-targetAngle);
+    Serial.println(absoluteAngle-targetAngle);
 
   buzzer.playNote (NOTE_A(4), 125, 15);  
   //delay(250);
@@ -333,7 +374,7 @@ void turn(int dir) {
 
       while (currentAngle > targetAngle + 5000) {
         gyro.read();
-        reading = (gyro.g.z >>8)<<8; // remove static noise
+        reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
         currentAngle += angularReading * SAMPLING_TIME / 1000; // sampling time is in ms
         //cycles++;
@@ -343,7 +384,7 @@ void turn(int dir) {
       motors.setSpeeds (+3*TURN_SPEED, -3*TURN_SPEED);
       while (currentAngle > targetAngle + THRESHOLD) {
         gyro.read();
-        reading = (gyro.g.z >>8)<<8; // remove static noise
+        reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
         currentAngle += angularReading * SAMPLING_TIME / 1000; // sampling time is in ms
         //cycles++;
@@ -362,7 +403,7 @@ void turn(int dir) {
 
       while (currentAngle < targetAngle - 5000) {
         gyro.read();
-        reading = (gyro.g.z >>8)<<8; // remove static noise
+        reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
         currentAngle += angularReading * SAMPLING_TIME / 1000; // sampling time is in ms
         //cycles++;
@@ -371,7 +412,7 @@ void turn(int dir) {
       motors.setSpeeds (- 3*TURN_SPEED, + 3*TURN_SPEED);
       while (currentAngle < targetAngle - THRESHOLD) {
         gyro.read();
-        reading = (gyro.g.z >>8)<<8; // remove static noise
+        reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
         currentAngle += angularReading * SAMPLING_TIME / 1000; // sampling time is in ms
         //cycles++;
@@ -406,15 +447,20 @@ void setFullScale() {
 void checkOffset() {
   int redefinedOffset = 0;
   
-  for (int i=0; i<1000; i++) { // execute some readings when not moving
+  for (int i=0; i<500; i++) { // execute some readings when not moving
     gyro.read();
-    reading = (gyro.g.z >>8) << 8;
+   //reading = (gyro.g.z >> 14) << 14;
+   // reading = (gyro.g.z /16384) * 16384;
+   reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO;
+   //reading = (gyro.g.z);
+
     angularReading = reading * 17.5;
     currentOffset += angularReading;
     Serial.println(angularReading);
+    delay(5);
   }
   
-  currentOffset /= 1000;
+  currentOffset /= 500;
 
   if (currentOffset > 0) {
     while ( !(abs(currentOffset - redefinedOffset) < W_OFFSET/2) ) { // the only possible values that the offset can assume are multiple of 64*17.5
@@ -429,7 +475,7 @@ void checkOffset() {
   
     
   Serial.print("Current: ");
-  Serial.print(currentOffset);
+  Serial.println(currentOffset);
   Serial.print(" -> ");
   Serial.println(redefinedOffset);
 
