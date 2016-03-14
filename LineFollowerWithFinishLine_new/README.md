@@ -22,9 +22,9 @@ General Troubleshooting
 =======================
 Il parametro principale é `MAX_SPEED` (linea 23). In base al valore che sará assegnato ad esso ci si 
 presenteranno 3 casi:
-* `MAX_SPEED <= 300` : il valore di "error_divider" * (linea 47) viene impostato uguale a 4. Con queste impostazioni il robot non uscirá mai fuori pista.
+* `MAX_SPEED <= 300` : il valore di `error_divider` * (linea 47) viene impostato uguale a 4. Con queste impostazioni il robot non uscirá mai fuori pista.
 		
-* `MAX_SPEED > 300 && MAX_SPEED<=340` il valore di `error_divider` * (linea 53) viene impostato uguale a 7. In queto caso il robot potrebbe perdere il riferimento della linea nera e uscire dal tracciato. Dunque vi sono piú probabiliá che il robot esca se il valore di `MAX_SPEED` é piu vicino a 340 che a 300 e qundo le pile sono cariche/nuove. Se invece le pile sono scariche/usate allora vi é piú probabilitá che il polizumo completi il giro ed arrivi al traguardo. Ho pensato di mettere questo range in modo tale che la fortuna possa assistere i piú intraprendenti.
+* `MAX_SPEED > 300 && MAX_SPEED <= 340` il valore di `error_divider` * (linea 53) viene impostato uguale a 7. In queto caso il robot potrebbe perdere il riferimento della linea nera e uscire dal tracciato. Dunque vi sono piú probabiliá che il robot esca se il valore di `MAX_SPEED` é piu vicino a 340 che a 300 e qundo le pile sono cariche/nuove. Se invece le pile sono scariche/usate allora vi é piú probabilitá che il polizumo completi il giro ed arrivi al traguardo. Ho pensato di mettere questo range in modo tale che la fortuna possa assistere i piú intraprendenti.
 		
 * `MAX_SPEED > 340` : il valore di "error_divider" * (linea 57) viene impostato uguale a 9. In questo modo il robot uscirá sicuramente dal circuito.
 		
