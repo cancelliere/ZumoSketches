@@ -6,11 +6,13 @@ Descrizione Generale
 Lo sketch guida il polizumo attraverso un labirinto fino a trovare l'uscita/punto d'arrivo.
 
 # Preparazione Polizumo
-* Controllare che l'array dei sensori di riflessione sia montato ed eventualmente montarlo e rimuovere lo
+1. Controllare che l'array dei sensori di riflessione sia montato ed eventualmente montarlo e rimuovere lo
 shield delle fotoresistenze. 
-* Dopo aver compilato e caricato "MazeSolver.ino" sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore.
-* Si accenderanno quattro led: due rossi e due blu.
-* Posizionare il robot su una delle possibili entrate del labirinto e premere il pulsante 12 (PLAY) sul lato posteriore. Il polizumo si autocalibrerá e entrerá nel labirinto. Esso si fermerá appena incontrerá una zona nera abbastanza ampia da contenere tutti e sei sensori di riflessione. Bisogna riposizionare lo zumo alla stessa entrata precedente e ripremere il pulsante 12. Il robot ritroverá il punto d'arrivo seguendo il percoro diretto.
+2. Dopo aver compilato e caricato "MazeSolver.ino" sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore.
+3. Si accenderanno quattro led: due rossi e due blu.
+4. Posizionare il robot su una delle possibili entrate del labirinto e premere il pulsante 12 (PLAY) sul lato posteriore. 
+Il polizumo si autocalibrerá e entrerá nel labirinto. Esso si fermerá appena incontrerá una zona nera abbastanza ampia da contenere tutti e sei sensori di riflessione. Bisogna riposizionare lo zumo alla stessa entrata precedente e ripremere il pulsante 12. 
+Il robot ritroverá il punto d'arrivo seguendo il percoro diretto.
 
 Durante la stesura del codice si é cercato di farlo in modo chiaro e semplice aggiungendo commenti dove neccessario. Per meglio soddisfare le vostre esigenze leggete il codice e cambiate i parametri neccessari.
 
