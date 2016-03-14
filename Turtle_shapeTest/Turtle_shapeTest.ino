@@ -136,9 +136,7 @@ void loop() {
   straight(-1);
   turn(-1);
   straight(-1);
-  turn(-1);
-  straight(-1);
-  turn (1);
+  turn(1);
   straight(-1);
   turn (1);
   straight(-1);

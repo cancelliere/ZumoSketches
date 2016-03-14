@@ -1,5 +1,3 @@
-
-
 #include <ZumoMotors.h>
 #include <Pushbutton.h>
 #include <ZumoBuzzer.h>
@@ -12,7 +10,7 @@
 // Defines the time between the button press and the calibration phase
 #define BUTTON_DELAY 2000
 
-// The greater is this value, the softer will be the changes between speeds
+// The greater this value is, the softer the changes between speeds will be
 #define LOOP_DELAY 50
 
 // Speed range 0 - 400
@@ -95,11 +93,19 @@ void loop()
     
     // If the robot was going forward, then slow it
     else if(prevSpeed > 0)
+    {
       leftSpeed = rightSpeed = prevSpeed - (FORWARD_SPEED >> 3);
+      if(leftSpeed < (FORWARD_SPEED >> 3))
+        leftSpeed = rightSpeed = 0;
+    }
     
     // If the robot was going backward, then slow it
     else
+    {
       leftSpeed = rightSpeed = prevSpeed - (REVERSE_SPEED >> 3);
+      if(leftSpeed > (REVERSE_SPEED >> 3))
+        leftSpeed = rightSpeed = 0;
+    }
   }
 
   // Set the speed for the motors
