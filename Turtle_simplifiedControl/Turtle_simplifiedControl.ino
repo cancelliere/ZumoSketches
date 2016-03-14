@@ -28,7 +28,7 @@
 ZumoMotors motors;
 ZumoBuzzer buzzer;
 Pushbutton startButton(ZUMO_BUTTON);
-Pushbutton stopButton(11);
+Pushbutton stopButton(11, PULL_UP_ENABLED);
 L3G gyro;
 
 int reading; // numerical value from gyro
@@ -206,7 +206,8 @@ void buildList() {
         commandSet[i] = 0;
       }
     }
-    if (stopButton.isPressed()) {
+    /*if (stopButton.getSingleDebouncedRelease() && commands != 0) {
+   // if (stopButton.isPressed() && commands != 0) {
       for (int i=0; i<commands; i++) {
         commandList[i] = 99;
       }
@@ -217,7 +218,7 @@ void buildList() {
       delay(125);
       buzzer.playNote (NOTE_A(4), 125, 15);
       Serial.println("RESET");
-    }
+    }*/
     delay(25);
   }
   while(startButton.isPressed()) { //wait for the user to realease the button
