@@ -65,6 +65,8 @@ void setup() {
   for (int i=0; i<COMMANDS_NUM; i++) {
     commandList[i]=99;  //set to a value that doesn't interfere with the real commands
   }
+
+  buzzer.playNote (NOTE_A(4); 125; 15);
   
   //LDRcalibration2();
 
