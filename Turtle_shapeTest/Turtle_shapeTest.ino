@@ -66,7 +66,7 @@ void setup() {
     commandList[i]=99;  //set to a value that doesn't interfere with the real commands
   }
   
-  LDRcalibration2();
+  //LDRcalibration2();
 
 }
 
