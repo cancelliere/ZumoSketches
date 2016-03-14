@@ -3,7 +3,7 @@ MAZE SOLVER
 
 Descrizione Generale 
 --------------------
-Lo sketch guida il polizumo attraverso un labirinto fino a trovare l'uscita/punto d'arrivo.
+	Lo sketch guida il polizumo attraverso un labirinto fino a trovare l'uscita/punto d'arrivo.
 
 # Preparazione Polizumo
 1. Controllare che l'array dei sensori di riflessione sia montato ed eventualmente montarlo e rimuovere lo
