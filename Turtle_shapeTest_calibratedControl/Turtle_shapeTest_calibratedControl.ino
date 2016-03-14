@@ -6,6 +6,7 @@
 
 #define W_OFFSET 1120
 #define POWER_OF_TWO 64
+#define INITIAL_CORRECTION 10
 #define SAMPLING_TIME 11
 #define TURN_SPEED 25
 #define STRAIGHT_SPEED 200
@@ -183,7 +184,7 @@ void off2() {
   delay(1000);
   
       
-  motors.setSpeeds( STRAIGHT_SPEED + 5, STRAIGHT_SPEED);        
+  motors.setSpeeds( STRAIGHT_SPEED + INITIAL_CORRECTION, STRAIGHT_SPEED);        
   for ( int j = 0; j < 10; j++ ) {
     for (int i=0; i<10; i++) {
       gyro.read();
@@ -203,7 +204,7 @@ void off2() {
   motors.setSpeeds(0,0);
   delay(1000);
   
-  motors.setSpeeds( STRAIGHT_SPEED - 5, STRAIGHT_SPEED);        
+  motors.setSpeeds( STRAIGHT_SPEED - INITIAL_CORRECTION, STRAIGHT_SPEED);        
   
  for ( int j = 0; j < 10; j++ ) {
     for (int i=0; i<10; i++) {
@@ -308,49 +309,6 @@ void LDRcalibration2() {
   buzzer.playNote (NOTE_A(3), 125, 15); 
   
   return;
-}
-
-
-
-
-
-void LDRcalibration() {
-  int readings[4];
-  /*        0
-   *    1        2
-   *         3
-   */
-
-  //find min reading for each sensor when lit
- for (int i=0; i<4; i++) {
-   readings[i] = 1024;    //set to maximum
- }
-
- buzzer.playNote (NOTE_A(4), 125, 15);
- digitalWrite(LED_PIN, HIGH);  
- for (int cycle = 0; cycle < 50; cycle ++ ) {
-  readings[0] = min(readings[0], analogRead(FRONT_LDR));
-  readings[1] = min(readings[1], analogRead(SX_LDR));
-  readings[2] = min(readings[2], analogRead(RX_LDR));
-  readings[3] = min(readings[3], analogRead(BACK_LDR));
-  
-  delay(50);
- }
- digitalWrite(LED_PIN, LOW);
-
-  //store the minimum found in the previous cycle
-  sensorTh[0] = readings[0] * 4/5; // different proportions to adapt it to the soldered board
-  sensorTh[2] = readings[2] * 4/5; // it may need some modifications for the other boards
-  sensorTh[1] = readings[1] * 3/5;
-  sensorTh[3] = readings[3] * 3/5;
-
- for (int i=0; i<4; i++) {
-    Serial.print(sensorTh[i]);
-    Serial.print(" ");
-  }
-
-  delay(250);
-  buzzer.playNote (NOTE_A(4), 125, 15); 
 }
 
 

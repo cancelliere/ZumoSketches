@@ -6,6 +6,7 @@
 
 #define W_OFFSET 1120
 #define POWER_OF_TWO 64
+#define INITIAL_CORRECTION 10
 #define SAMPLING_TIME 11
 #define TURN_SPEED 25
 #define STRAIGHT_SPEED 200
@@ -121,7 +122,7 @@ void off2() {
   delay(1000);
   
       
-  motors.setSpeeds( STRAIGHT_SPEED + 5, STRAIGHT_SPEED);        
+  motors.setSpeeds( STRAIGHT_SPEED + INITIAL_CORRECTION, STRAIGHT_SPEED);        
   for ( int j = 0; j < 10; j++ ) {
     for (int i=0; i<10; i++) {
       gyro.read();
@@ -141,7 +142,7 @@ void off2() {
   motors.setSpeeds(0,0);
   delay(1000);
   
-  motors.setSpeeds( STRAIGHT_SPEED - 5, STRAIGHT_SPEED);        
+  motors.setSpeeds( STRAIGHT_SPEED - INITIAL_CORRECTION, STRAIGHT_SPEED);        
   
  for ( int j = 0; j < 10; j++ ) {
     for (int i=0; i<10; i++) {
