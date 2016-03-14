@@ -28,4 +28,4 @@ presenteranno 3 casi:
 		
 * `MAX_SPEED > 340` : il valore di "error_divider" * (linea 57) viene impostato uguale a 9. In questo modo il robot uscirá sicuramente dal circuito.
 		
-* `error_divider` indica il valore derivativo nella formula che si trova alla linea 125. Piú questo valore é alto meno il robot riesce a seguire le curve impegnative. Dunque se nel vostro circuito le curve non sono abbastanza strette da fare uscire il robot dal circuito allora agite su questo valore.
+* (*) `error_divider` indica il valore derivativo nella formula che si trova alla linea 125. Piú questo valore é alto meno il robot riesce a seguire le curve impegnative. Dunque se nel vostro circuito le curve non sono abbastanza strette da fare uscire il robot dal circuito allora agite su questo valore.
