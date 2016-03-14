@@ -14,7 +14,7 @@
 #define STRAIGHT_TH 125
 #define CORRECTION_FACTOR 20
 #define STRAIGHT_DURATION 500
-#define COMMANDS_NUM 10
+#define COMMANDS_NUM 12
 
 #define FRONT_LDR 4
 #define BACK_LDR 0
@@ -104,7 +104,7 @@ void LDRcalibration2() {
 
  buzzer.playNote (NOTE_A(4), 125, 15);
  digitalWrite(LED_PIN, HIGH);  
- 
+ Serial.println("BRIGHT");
  for ( cycle = 0; cycle < 100; cycle ++ ) {
   readingsH[0] += analogRead(FRONT_LDR);
   readingsH[1] += analogRead(SX_LDR);
@@ -130,6 +130,7 @@ void LDRcalibration2() {
  digitalWrite(LED_PIN, HIGH); 
  delay(1000); 
  
+ Serial.println("DARK");
  for ( cycle = 0; cycle < 100; cycle ++ ) {
   readingsL[0] += analogRead(FRONT_LDR);
   readingsL[1] += analogRead(SX_LDR);
@@ -175,7 +176,7 @@ void buildList() {
   bool commandSet[4] = {0};
   unsigned long lowStart;
 
-  while (commands <= COMMANDS_NUM && !startButton.isPressed() ) { //continue to read until the maximum number of commands is entered 
+  while (commands < COMMANDS_NUM && !startButton.isPressed() ) { //continue to read until the maximum number of commands is entered 
                                                                                                        //or the start button is pressed
     readings[0] = analogRead(FRONT_LDR);
     readings[1] = analogRead(SX_LDR);

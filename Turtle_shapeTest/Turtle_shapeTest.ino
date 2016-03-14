@@ -28,7 +28,7 @@
 ZumoMotors motors;
 ZumoBuzzer buzzer;
 Pushbutton startButton(ZUMO_BUTTON);
-Pushbutton stopButton(11);
+Pushbutton stopButton(11, PULL_UP_ENABLED);
 L3G gyro;
 
 int reading; // numerical value from gyro
@@ -41,9 +41,7 @@ int stepDeviation = 0;
 long targetAngle; // ideal angular position to reach
 byte commandList[COMMANDS_NUM];
 unsigned int sensorTh[4];
-int stepDeviation1 = 0;
-int stepDeviation2 = 0;
-int offo = 0;
+
 unsigned long start; // check loops duration
 
 void setup() {
@@ -64,116 +62,89 @@ void setup() {
   
   checkOffset();
   
-  off2();
-  
   for (int i=0; i<COMMANDS_NUM; i++) {
     commandList[i]=99;  //set to a value that doesn't interfere with the real commands
   }
   
   LDRcalibration2();
 
-  delay(1000);
 }
 
 void loop() {
+  startButton.waitForButton();
+  delay(500);
   
-  buildList();
-
-  evaluateList(commandList);
-  
-  absoluteAngle = targetAngle  = 0;
-  
-  for (int i=0; i<COMMANDS_NUM; i++) {
-    commandList[i]=99;  //set to a value that doesn't interfere with the real commands
+  for (int steps = 0; steps < 10; steps++) {
+    straight(1);
   }
-  
-}
 
-void off2() {
-  int dir = 1;
-  unsigned long startStraight;
-  unsigned int cycle = 0;
-  int absStepDeviation;
-  int leftCorrection = 0, rightCorrection = 0;
-  long previous = 0;
-  
-  currentAngle = absoluteAngle;
-  
-  motors.setSpeeds( STRAIGHT_SPEED, STRAIGHT_SPEED);        
-  for ( int j = 0; j < 10; j++ ) {
-    for (int i=0; i<10; i++) {
-      gyro.read();
-      reading = (gyro.g.z/POWER_OF_TWO) *POWER_OF_TWO; // remove static noise
-      angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
-      currentAngle += (angularReading + previous)/2 * SAMPLING_TIME / 1000.0; // sampling time is in ms
-      previous = angularReading;
-      delay(10);
-     }
-    offo += currentAngle;
-    currentAngle = 0;
-    previous = 0;
-  }  
-  offo = offo / 10;
-  Serial.println(offo);
-  
-    
-  motors.setSpeeds(0,0);
-  delay(1000);
-  
-      
-  motors.setSpeeds( STRAIGHT_SPEED + 5, STRAIGHT_SPEED);        
-  for ( int j = 0; j < 10; j++ ) {
-    for (int i=0; i<10; i++) {
-      gyro.read();
-      reading = (gyro.g.z/POWER_OF_TWO) *POWER_OF_TWO; // remove static noise
-      angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
-      currentAngle += (angularReading + previous)/2 * SAMPLING_TIME / 1000.0; // sampling time is in ms
-      previous = angularReading;
-      delay(10);
-     }
-    stepDeviation1 += currentAngle;
-    currentAngle = 0;
-    previous = 0;
-  }  
-  stepDeviation1 = stepDeviation1 / 10;
-  Serial.println(stepDeviation1);
-  
-  motors.setSpeeds(0,0);
-  delay(1000);
-  
-  motors.setSpeeds( STRAIGHT_SPEED - 5, STRAIGHT_SPEED);        
-  
- for ( int j = 0; j < 10; j++ ) {
-    for (int i=0; i<10; i++) {
-      gyro.read();
-      reading = (gyro.g.z/POWER_OF_TWO) *POWER_OF_TWO; // remove static noise
-      angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
-      currentAngle += (angularReading + previous)/2 * SAMPLING_TIME / 1000.0; // sampling time is in ms
-      previous = angularReading;
-      delay(10);
-     }
-    stepDeviation2 += currentAngle;
-    currentAngle = 0;
-    previous = 0;
-  }  
-  stepDeviation2 = stepDeviation2 / 10;
-  Serial.println(stepDeviation2);
-  //stepDeviation2  la deviazione che ho quando la ruota sinistra  piu' lenta e quindi quella che deve essere utilizzata 
-  //quando stepDeviation e' minore di zero!!!
-  motors.setSpeeds( 0, 0);
-  stepDeviation1 = abs(stepDeviation1);
+  startButton.waitForButton();
+  delay(500);
 
-  if ( offo > 0 ) {
-    offo = 5/stepDeviation1*offo;
+  for (int steps = 0; steps < 10; steps++) {
+    straight(-1);
   }
-  else
-    offo = -5/stepDeviation2*offo;
 
-  buzzer.playNote (NOTE_A(4), 125, 15);  
-  //delay(250);
+  startButton.waitForButton();
+  delay(500);
+  
+  //STRAIGHT 5 BACK 5
+  for (int dir = 1; dir >-2; dir-=2) {
+    for (int steps = 0; steps < 5; steps++) {
+      straight(dir);
+    }
+  }
+
+  startButton.waitForButton();
+  delay(500);
+  
+  //SQUARE side 2
+  for (int l = 0; l < 4 ; l++) {
+    straight(1);
+    straight(1);
+    turn(-1);
+  }
+
+  startButton.waitForButton();
+  delay(500);
+  
+  //T
+  straight(1);
+  straight(1);
+  turn(-1);
+  straight(1);
+  straight(-1);
+  straight(-1);
+  straight(1);
+  turn(-1);
+  straight(1);
+  straight(1);
+
+  startButton.waitForButton();
+  delay(500);
+  
+  //SNAKE
+  straight(1);
+  turn (1);
+  straight(1);
+  turn(-1);
+  straight(1);
+  turn(-1);
+  straight(1);
+  turn (1);
+  straight(1);
+  straight(-1);
+  turn(-1);
+  straight(-1);
+  turn(-1);
+  straight(-1);
+  turn (1);
+  straight(-1);
+  turn (1);
+  straight(-1);
+  turn(-1);
+  straight(-1);
 }
-
-
 
 void LDRcalibration2() {
 
@@ -194,7 +165,7 @@ void LDRcalibration2() {
 
  buzzer.playNote (NOTE_A(4), 125, 15);
  digitalWrite(LED_PIN, HIGH);  
- 
+ Serial.println("BRIGHT");
  for ( cycle = 0; cycle < 100; cycle ++ ) {
   readingsH[0] += analogRead(FRONT_LDR);
   readingsH[1] += analogRead(SX_LDR);
@@ -220,6 +191,7 @@ void LDRcalibration2() {
  digitalWrite(LED_PIN, HIGH); 
  delay(1000); 
  
+ Serial.println("DARK");
  for ( cycle = 0; cycle < 100; cycle ++ ) {
   readingsL[0] += analogRead(FRONT_LDR);
   readingsL[1] += analogRead(SX_LDR);
@@ -249,49 +221,6 @@ void LDRcalibration2() {
 }
 
 
-
-
-
-void LDRcalibration() {
-  int readings[4];
-  /*        0
-   *    1        2
-   *         3
-   */
-
-  //find min reading for each sensor when lit
- for (int i=0; i<4; i++) {
-   readings[i] = 1024;    //set to maximum
- }
-
- buzzer.playNote (NOTE_A(4), 125, 15);
- digitalWrite(LED_PIN, HIGH);  
- for (int cycle = 0; cycle < 50; cycle ++ ) {
-  readings[0] = min(readings[0], analogRead(FRONT_LDR));
-  readings[1] = min(readings[1], analogRead(SX_LDR));
-  readings[2] = min(readings[2], analogRead(RX_LDR));
-  readings[3] = min(readings[3], analogRead(BACK_LDR));
-  
-  delay(50);
- }
- digitalWrite(LED_PIN, LOW);
-
-  //store the minimum found in the previous cycle
-  sensorTh[0] = readings[0] * 4/5; // different proportions to adapt it to the soldered board
-  sensorTh[2] = readings[2] * 4/5; // it may need some modifications for the other boards
-  sensorTh[1] = readings[1] * 3/5;
-  sensorTh[3] = readings[3] * 3/5;
-
- for (int i=0; i<4; i++) {
-    Serial.print(sensorTh[i]);
-    Serial.print(" ");
-  }
-
-  delay(250);
-  buzzer.playNote (NOTE_A(4), 125, 15); 
-}
-
-
 void buildList() {
   buzzer.playNote (NOTE_A(4), 125, 15); 
   delay(125);
@@ -308,7 +237,7 @@ void buildList() {
   bool commandSet[4] = {0};
   unsigned long lowStart;
 
-  while (commands <= COMMANDS_NUM && !startButton.isPressed() ) { //continue to read until the maximum number of commands is entered 
+  while (commands < COMMANDS_NUM && !startButton.isPressed() ) { //continue to read until the maximum number of commands is entered 
                                                                                                        //or the start button is pressed
     readings[0] = analogRead(FRONT_LDR);
     readings[1] = analogRead(SX_LDR);
@@ -339,6 +268,19 @@ void buildList() {
         commandSet[i] = 0;
       }
     }
+    /*if (stopButton.getSingleDebouncedRelease() && commands != 0) {
+   // if (stopButton.isPressed() && commands != 0) {
+      for (int i=0; i<commands; i++) {
+        commandList[i] = 99;
+      }
+      commands = 0;
+      buzzer.playNote (NOTE_A(4), 125, 15); 
+      delay(125);
+      buzzer.playNote (SILENT_NOTE, 125, 15);
+      delay(125);
+      buzzer.playNote (NOTE_A(4), 125, 15);
+      Serial.println("RESET");
+    }*/
     delay(25);
   }
   while(startButton.isPressed()) { //wait for the user to realease the button
@@ -384,7 +326,6 @@ void straight (int dir) {
   unsigned long startStraight;
   unsigned int cycle = 0;
   int leftCorrection = 0, rightCorrection = 0;
-  int previous = 0; //prova
   currentAngle = absoluteAngle;
 
   //Serial.print("START: ");
@@ -394,36 +335,40 @@ void straight (int dir) {
     motors.setSpeeds( 0, 0);
         
     while (millis() - startStraight < STRAIGHT_DURATION) {
-      motors.setSpeeds( dir * (+STRAIGHT_SPEED + leftCorrection + offo), dir * (+STRAIGHT_SPEED + rightCorrection) );
+      motors.setSpeeds( dir * (+STRAIGHT_SPEED + leftCorrection), dir * (+STRAIGHT_SPEED + rightCorrection) );
       
       for (int i=0; i<10; i++) {
         gyro.read();
         reading = (gyro.g.z / POWER_OF_TWO) * POWER_OF_TWO; // remove static noise
         angularReading = reading * 17.5 - offset; // compensate for residual noise (almost constant with time)
-        currentAngle += (angularReading + previous)/2 * SAMPLING_TIME / 1000.0; // sampling time is in ms
-        previous = angularReading;
+        currentAngle += angularReading * SAMPLING_TIME / 1000.0; // sampling time is in ms
         delay(10);
      }
       
       stepDeviation = currentAngle - targetAngle;
-      Serial.println(currentAngle);
+      
       cycle++;
     
       //Serial.print (stepDeviation);
       //Serial.print (" ");
-      if ( dir == 1 ) {
-        if ( stepDeviation > 0 )
-          leftCorrection = stepDeviation*5/stepDeviation1;
-        else 
-          leftCorrection = stepDeviation*5/stepDeviation2;  
+      
+
+      if (stepDeviation > 5*STRAIGHT_TH) {
+        leftCorrection += dir*STRAIGHT_SPEED/10;  
       }
-      else {
-        if ( stepDeviation > 0 )
-          leftCorrection = -stepDeviation*5/stepDeviation1;
-        else 
-          leftCorrection = -stepDeviation*5/stepDeviation2;
+      else if (stepDeviation > STRAIGHT_TH) {                                                                                                                                          
+        leftCorrection += dir*STRAIGHT_SPEED/40;
       }
       
+      else if (stepDeviation < -5*STRAIGHT_TH) {
+        leftCorrection -= dir*STRAIGHT_SPEED/10;
+      }
+      else if (stepDeviation > STRAIGHT_TH) {                                                                                                                                          
+        leftCorrection -= dir*STRAIGHT_SPEED/40;
+      }
+
+      if (leftCorrection > 75) leftCorrection = 75;
+      else if (leftCorrection < -75) leftCorrection = -75;
       
       Serial.print(" - L: ");
       Serial.println(leftCorrection);
