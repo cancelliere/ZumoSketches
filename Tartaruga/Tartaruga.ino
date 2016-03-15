@@ -4,25 +4,26 @@
 #include <Pushbutton.h>
 #include <ZumoBuzzer.h> 
 
+#define COMMANDS_NUM 12
+#define STRAIGHT_DURATION 500
+#define STRAIGHT_SPEED 200
+#define TURN_SPEED 25
+#define TURN_ANGLE 60000
+
 #define W_OFFSET 1120
 #define POWER_OF_TWO 64
 #define INITIAL_CORRECTION 10
 #define SAMPLING_TIME 11
-#define TURN_SPEED 25
-#define STRAIGHT_SPEED 200
-#define TURN_ANGLE 90000
 #define THRESHOLD 125
 #define STRAIGHT_TH 125
 #define CORRECTION_FACTOR 20
-#define STRAIGHT_DURATION 500
-#define COMMANDS_NUM 12
 
 #define FRONT_LDR 4
 #define BACK_LDR 0
 #define SX_LDR 1
 #define RX_LDR 3
 
-#define LOW_TIME 600
+#define LOW_TIME 500
 
 #define LED_PIN 13
 
@@ -248,50 +249,6 @@ void LDRcalibration2() {
   
   return;
 }
-
-
-
-
-
-void LDRcalibration() {
-  int readings[4];
-  /*        0
-   *    1        2
-   *         3
-   */
-
-  //find min reading for each sensor when lit
- for (int i=0; i<4; i++) {
-   readings[i] = 1024;    //set to maximum
- }
-
- buzzer.playNote (NOTE_A(4), 125, 15);
- digitalWrite(LED_PIN, HIGH);  
- for (int cycle = 0; cycle < 50; cycle ++ ) {
-  readings[0] = min(readings[0], analogRead(FRONT_LDR));
-  readings[1] = min(readings[1], analogRead(SX_LDR));
-  readings[2] = min(readings[2], analogRead(RX_LDR));
-  readings[3] = min(readings[3], analogRead(BACK_LDR));
-  
-  delay(50);
- }
- digitalWrite(LED_PIN, LOW);
-
-  //store the minimum found in the previous cycle
-  sensorTh[0] = readings[0] * 4/5; // different proportions to adapt it to the soldered board
-  sensorTh[2] = readings[2] * 4/5; // it may need some modifications for the other boards
-  sensorTh[1] = readings[1] * 3/5;
-  sensorTh[3] = readings[3] * 3/5;
-
- for (int i=0; i<4; i++) {
-    Serial.print(sensorTh[i]);
-    Serial.print(" ");
-  }
-
-  delay(250);
-  buzzer.playNote (NOTE_A(4), 125, 15); 
-}
-
 
 void buildList() {
   buzzer.playNote (NOTE_A(4), 125, 15); 
