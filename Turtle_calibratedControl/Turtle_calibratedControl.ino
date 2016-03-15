@@ -2,7 +2,7 @@
 #include <L3G.h>
 #include <ZumoMotors.h>
 #include <Pushbutton.h>
-#include <ZumoBuzzer.h>
+#include <ZumoBuzzer.h> 
 
 #define W_OFFSET 1120
 #define POWER_OF_TWO 64
@@ -196,7 +196,7 @@ void LDRcalibration2() {
  buzzer.playNote (NOTE_A(4), 125, 15);
  digitalWrite(LED_PIN, HIGH);  
  
- for ( cycle = 0; cycle < 100; cycle ++ ) {
+ for ( cycle = 0; cycle < 40; cycle ++ ) {
   readingsH[0] += analogRead(FRONT_LDR);
   readingsH[1] += analogRead(SX_LDR);
   readingsH[2] += analogRead(RX_LDR);
@@ -205,7 +205,7 @@ void LDRcalibration2() {
  }
  
  for ( i = 0; i < 4; i++ ) 
-   readingsH[i] = readingsH[i] / 100;
+   readingsH[i] = readingsH[i] / 40;
    
  digitalWrite(LED_PIN, LOW);
  delay(500);
@@ -221,7 +221,7 @@ void LDRcalibration2() {
  digitalWrite(LED_PIN, HIGH); 
  delay(1000); 
  
- for ( cycle = 0; cycle < 100; cycle ++ ) {
+ for ( cycle = 0; cycle < 40; cycle ++ ) {
   readingsL[0] += analogRead(FRONT_LDR);
   readingsL[1] += analogRead(SX_LDR);
   readingsL[2] += analogRead(RX_LDR);
@@ -230,7 +230,7 @@ void LDRcalibration2() {
  }
  
  for ( i = 0; i < 4; i++ ) 
-   readingsL[i] = readingsL[i] / 100;
+   readingsL[i] = readingsL[i] / 40;
  
  digitalWrite(LED_PIN, LOW);
  

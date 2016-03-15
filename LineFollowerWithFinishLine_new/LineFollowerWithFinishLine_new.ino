@@ -20,7 +20,7 @@
 #define QTR_THRESHOLD 400
 #define TRUE 1
 #define FALSE 0
-#define MAX_SPEED 400
+#define MAX_SPEED 350
 
 
 
