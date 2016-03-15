@@ -11,7 +11,7 @@ Descrizione generale
 Dopo aver montato lo shield con le fotoresistenze sul robot, rimosso l'array dei sensori di riflessione e compilato e caricato "LightControl.ino" sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore.Si accenderanno quattro led: due rossi e due blu. A questo punto bisogna procedere con la calibrazione delle fotoresistenze:
 
 1. Posizionare lo zumo sul piano di utilizzo(se farete correre il vostro robot su un tavolo allora posizionarlo sul tavolo, altrimenti sul pavimento, e cosi via).
-2. Premere il pulsante di sinistra e allontanare subito la mano dalla scheda in modo tale da non fare `ombra`(avrete due secondi per fare ció). Sentirete un beep che indica l'inizio della calibrazione, e un secondo beep e lo spegnimento del led 13 indicheranno la fine del procedimento.
+2. Premere il pulsante di sinistra e allontanare subito la mano dalla scheda in modo tale da non fare ombra(avrete due secondi per fare ció). Sentirete un beep che indica l'inizio della calibrazione, e un secondo beep e lo spegnimento del led 13 indicheranno la fine del procedimento.
 3. Se doveste spostare il vostro zumo dal tavolo al pavimento, oppure vi é un cambiamento di illuminazione, allora dovrete andare al passo 1.
 
 Durante la stesura del codice si é cercato di farlo in modo chiaro e semplice aggiungendo commenti dove 
