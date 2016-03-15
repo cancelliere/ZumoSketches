@@ -3,7 +3,9 @@ LIGHT CONTROL
 
 Descrizione generale 
 --------------------
-	Lo sketch permette di controllare il polizumo robot con un fascio di luce. Puntando la luce su una delle quattro fotoresistenze montate sul robot esso si muove. Puó andare avanti, indietro, destra e sinistra.
+	Lo sketch permette di controllare il polizumo robot con un fascio di luce. 
+	Puntando la luce su una delle quattro fotoresistenze montate sul robot esso si muove. 
+	Puó andare avanti, indietro, destra e sinistra.
 	
 # Preparazione Polizumo
 Dopo aver montato lo shield con le fotoresistenze sul robot, rimosso l'array dei sensori di riflessione e compilato e caricato "LightControl.ino" sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore.Si accenderanno quattro led: due rossi e due blu. A questo punto bisogna procedere con la calibrazione delle fotoresistenze:
