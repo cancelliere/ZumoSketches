@@ -1,15 +1,6 @@
 /*
+ * This is a modified version by Politecnico di Torino of the  
  * Demo line-following code for the Pololu Zumo Robot
- *
- * This code will follow a black line on a white background, using a
- * PID-based algorithm.  It works decently on courses with smooth, 6"
- * radius curves and has been tested with Zumos using 30:1 HP and
- * 75:1 HP motors.  Modifications might be required for it to work
- * well on different courses or with different motors.
- *
- * http://www.pololu.com/catalog/product/2506
- * http://www.pololu.com
- * http://forum.pololu.com
  */
 
 #include <QTRSensors.h>
@@ -17,52 +8,55 @@
 #include <ZumoMotors.h>
 #include <ZumoBuzzer.h>
 #include <Pushbutton.h>
-#define QTR_THRESHOLD 400
-#define TRUE 1
-#define FALSE 0
-#define MAX_SPEED 350
-
-
 
 
 ZumoBuzzer buzzer;
 ZumoReflectanceSensorArray reflectanceSensors;
 ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON);
-int lastError = 0;
-bool flag = TRUE;
-int error_divider, while_flag=0;
 
+// Quanto ti senti coraggioso?
+// Decidi di quanto aumentare la velocità del tuo zumo
+// Valori consentiti: 0 - 100
+// Valori negativi rallenteranno il tuo zumo
+const int SPEED_INCREASE = 50;
 
+// Numero di giri
+const int MAX_LAPS = 3;
 
 // This is the maximum speed the motors will be allowed to turn.
-// (400 lets the motors go at top speed; decrease to impose a speed limit)
-//const int MAX_SPEED = 340;
+const int MAX_SPEED = 350 + SPEED_INCREASE / 2;
 
+unsigned int max_error;
+byte max_nerrors;
+byte laps;
+
+int lastError = 0;
+const int THRESH = 200;
 
 void setup()
 {
-  //at this point the value of the error_divider is setted according to the MAX_SPEED value.
-  if(MAX_SPEED <= 300){
-    error_divider=4;
-    //if the MAX_SPEED is less than 300 the zumo will reach the finish line.
-    flag=FALSE;
-
-    //if MAX_SPEED is between 300 and 340 the zumo will follow the line and it depends on the charge of batteries and luck if he will reach the finish line
-  }else if(MAX_SPEED >300 && MAX_SPEED<=340){
-    error_divider=7;
-    flag=TRUE;
-    // it is sure that the zumo will fail.
-  }else if(MAX_SPEED >340){
-    error_divider=9;
-    flag=TRUE;
-  }
   // Play a little welcome song
   buzzer.play(">g32>>c32");
 
+  // Set the maximum value of error allowed according to the speed
+  // (only if SPEED_INCREASE is positive
+  max_error = 2501;
+  if(SPEED_INCREASE > 0)
+    max_error = 2500 - (SPEED_INCREASE*sqrt(SPEED_INCREASE));
+
+  // Set the maximum number of 'errors' allowed according to the speed
+  // (only if SPEED_INCREASE is greater than 50)
+  max_nerrors = 25;
+  if(SPEED_INCREASE >= 40)
+    max_nerrors -= (SPEED_INCREASE-40)/4;
+
+  // Reset the number of laps
+  laps = 0;
+
   // Initialize the reflectance sensors module
   reflectanceSensors.init();
-  
+
   // Wait for the user button to be pressed and released
   button.waitForButton();
 
@@ -98,14 +92,13 @@ void setup()
   // Play music and wait for it to finish before we start driving.
   buzzer.play("L16 cdegreg4");
   while(buzzer.isPlaying());
-
-  
-  
 }
 
 void loop()
 {
   unsigned int sensors[6];
+  static unsigned int nerrors;
+  static unsigned long lastLap;
 
   // Get the position of the line.  Note that we *must* provide the "sensors"
   // argument to readLine() here, even though we are not interested in the
@@ -122,9 +115,9 @@ void loop()
   // constant of 6, which should work decently for many Zumo motor choices.
   // You probably want to use trial and error to tune these constants for
   // your particular Zumo and line course.
-  int speedDifference = error / error_divider  + 6 * (error - lastError);
+  int speedDifference = error / 5.5 + 6 * (error - lastError);
 
-  lastError = error;
+  lastError = error;  
 
   // Get individual motor speeds.  The sign of speedDifference
   // determines if the robot turns left or right.
@@ -136,53 +129,68 @@ void loop()
   // and the other will be at MAX_SPEED-|speedDifference| if that is positive,
   // else it will be stationary.  For some applications, you might want to
   // allow the motor speed to go negative so that it can spin in reverse.
-    if (m1Speed < 0)
-      m1Speed = 0;
-    if (m2Speed < 0)
-      m2Speed = 0;
-    if (m1Speed > MAX_SPEED)
-      m1Speed = MAX_SPEED;
-    if (m2Speed > MAX_SPEED)
-      m2Speed = MAX_SPEED;
+  if (m1Speed < 0)
+    m1Speed = 0;
+  if (m2Speed < 0)
+    m2Speed = 0;
+  if (m1Speed > MAX_SPEED)
+    m1Speed = MAX_SPEED;
+  if (m2Speed > MAX_SPEED)
+    m2Speed = MAX_SPEED;
 
-    motors.setSpeeds(m1Speed, m2Speed);
-  
-  //checks if the zumo has reached the finish line
-  if(sensors[0] > QTR_THRESHOLD && sensors[5] > QTR_THRESHOLD){
-    motors.setSpeeds(0, 0);
-    buzzer.play("L16 cdegreg4");
-    //wait for the button to be pressed and restart driving
-    button.waitForButton();
-    // Play music and wait for it to finish before we start driving.
-    buzzer.play(">g32>>c32");
-    while(buzzer.isPlaying());
-
-    //gives time to the zumo to surpass the finish line and restart the line.
-    motors.setSpeeds(MAX_SPEED, MAX_SPEED);
-    delay(100);
-  }
-  //if it enters in this if it means that the robot went out of track.
-  if(sensors[0] < QTR_THRESHOLD && sensors[1]< QTR_THRESHOLD && sensors[2] < QTR_THRESHOLD && sensors[3] < QTR_THRESHOLD && sensors[4] < QTR_THRESHOLD && sensors[5] < QTR_THRESHOLD){
-    while(flag){
-      motors.setSpeeds(MAX_SPEED, MAX_SPEED);
-      delay(500);
-      flag=FALSE;
-      while_flag=1;
-    }
-    if(while_flag)
-      flag=TRUE;
-      
-    while(flag){
-      motors.setSpeeds(0, 0);
-      //if the button is pressed and the zumo is putted again in the track it will follow the line.
-      button.waitForButton();
-      flag=FALSE;
-      while_flag=1;
-    }
-    if(while_flag)
-      flag=TRUE;
-
-    while_flag=0;
+  // Reset the number of errors if there is no error
+  if(abs(error) < max_error)
+    nerrors = 0;
+  // If there is an error
+  else
+  {
+    nerrors++;
     
+    // If the number of errors equals the maximum allowed
+    if(nerrors == max_nerrors)
+    {
+      buzzer.playNote(NOTE_A(4), 125, 15);
+      
+      // Go straight on and then stop
+      m1Speed = m2Speed = MAX_SPEED;
+      motors.setSpeeds(m1Speed, m2Speed);
+      delay(200);
+      motors.setSpeeds(0, 0);
+
+      buzzer.playNote(NOTE_A(3), 125, 15);
+
+      // Wait for the button before restart driving
+      button.waitForButton();
+    }
   }
+
+  motors.setSpeeds(m1Speed, m2Speed);
+
+  // Has the robot reached the finish line?
+  if(sensors[0] > THRESH && sensors[5] > THRESH)
+  { 
+    if(millis() - lastLap > 2500)
+    {
+      // Reset the number of laps
+      laps++;
+      lastLap = millis();
+
+      // End of the race
+      if(laps > MAX_LAPS)
+      {
+        laps = 0;
+      
+        motors.setSpeeds(0, 0); 
+        buzzer.play("L16 cdegreg4"); 
+    
+        // Wait for the button to be pressed and restart driving 
+        button.waitForButton();
+      }
+    
+      // Play a bip when the finish line is overpassed
+      else
+        buzzer.play(">g32>>c32");
+    }
+  } 
+
 }

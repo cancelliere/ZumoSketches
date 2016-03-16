@@ -1,31 +1,29 @@
-CIRCUITO
-========
+# Circuito 
 
-Descrizione Generale
---------------------
-	Lo sketch guida il polizumo nel seguire una linea nera su uno sfondo bianco fino a quando non trova uno
-	spazio nero tale da coprire contemporaneamente i due sensori di riflessione posizionati sui due estremi della
-	batteria. Il robot si ferma anche quando perde il suo riferimento o meglio quando la linea nera non si
-	trova pi� sotto i sensori.
+## Descrizione Generale
+Il programma `Circuito` permette al robot Zumo di percorrere un circuito di gara fino a quando non ha completato il numero di giri richiesti oppure è uscito di pista a causa dell'eccessiva velocità.
 
-Preparazione Polizumo
-=====================
-1. Dopo aver compilato e caricato LineFollowerWithFinishLine_new.ino sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore. Si accenderanno quattro led: due rossi e due blu.
-2. Successivamente posizionare il robot sulla linea nera e premere il pulsante 12 (PLAY).
-3. Attendere che il polizumo finisca la calibrazione. Ci� avviene quando lo zumo si ferma e il led 13 si spegne.
-4. Premendo nuovamente il pulsante il robot parte e segue la linea fino al traguardo(da posizionare su una tratta retta del circuito) dove si fermer�. Il robot si fermer� anche se dovesse uscire fuori dal circuito dovuto a delle curve impegnative.
-5. Quando il robot si ferma � perch� ha raggiunto il traguardo oppure perch� � uscito fuori dalla pista; basta riposizionarlo sul circuito e premere di nuovo il pulsante 12 per farlo ripartire.
+## Preparazione del circuito
+Il circuito di gara deve essere realizzato sovrapponendo una linea nera (larghezza pari a circa due centimetri) su uno sfondo bianco. La linea del traguardo deve essere invece realizzata tracciando una linea nera, di lunghezza pari ad almeno la larghezza del robot, ortogonalmente ad un tratto di circuito rettilineo. 
 
-Durante la stesura del codice si � cercato di farlo in modo chiaro e semplice aggiungendo commenti dove neccessario. Per meglio soddisfare le vostre esigenze leggete il codice e cambiate i parametri neccessari.
+## Preparazione Robot Zumo
+1. Dopo aver compilato e caricato `Circuito.ino` sulla scheda Arduino, scollegare il cavo usb e alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore. Si accenderanno quattro led: due rossi e due blu.
+2. Posizionare il robot sul circuito, preferibilmente nel tratto di rettilineo antecedente il traguardo e premere il pulsante `PLAY`. Attendere che il robot finisca la calibrazione: ciò avviene quando lo Zumo si ferma e il led arancione si spegne.
+3. Dopo aver posizionato nuovamente il robot in posizione corretta, premere il pulsante `PLAY`: la gara ha inizio e il robot prosegue fino a quando ha completato i giri richiesti (a tal fine non viene conteggiato il primo passaggio dal traguardo in quanto si effettua una partenza in velocità). 
+4. Nel caso il robot esca dal circuito (vedere di seguito per capire in quali circostanze ciò possa accadere) riposizionare lo Zumo nel punto in cui era uscito e premere il pulsante `PLAY` per farlo ripartire.
+5. Quando il robot riesce a completare correttamente i giri previsti, se si desidera ripetere la gara, posizionare nuovamente lo Zumo nel tratto di circuito antecedente il traguardo e ripetere il punto 3.
 
-General Troubleshooting
-=======================
-Il parametro principale � `MAX_SPEED` (linea 23). In base al valore che sar� assegnato ad esso ci si
-presenteranno 3 casi:
-* `MAX_SPEED <= 300` : il valore di `error_divider` * (linea 47) viene impostato uguale a 4. Con queste impostazioni il robot non uscir� mai fuori pista.
+## Parametri modificabili
+1. `MAX_LAPS`: numero di giri che il robot deve effettuare.
+2. `SPEED_INCREASE`: valore che determina di quanto aumentare la velocità del robot rispetto ad un valore predefinito di sicurezza. Tale costante, che può variare nel range 0 - 100, permette quindi di rendere il proprio robot più veloce di quello degli altri: ovviamente tale scelta è un rischio in quanto ad una maggiore velocità corrisponde un maggior rischio di non riuscire ad affrontare le curve più impegnative. Si noti che se il valore viene lasciato pari a 0 si è in una condizione in cui, se il circuito è stato realizzato correttamente, il robot non dovrebbe mai uscire di pista.
 
-* `MAX_SPEED > 300 && MAX_SPEED <= 340` il valore di `error_divider` * (linea 53) viene impostato uguale a 7. In queto caso il robot potrebbe perdere il riferimento della linea nera e uscire dal tracciato. Dunque vi sono pi� probabili� che il robot esca se il valore di `MAX_SPEED` � piu vicino a 340 che a 300 e qundo le pile sono cariche/nuove. Se invece le pile sono scariche/usate allora vi � pi� probabilit� che il polizumo completi il giro ed arrivi al traguardo. Ho pensato di mettere questo range in modo tale che la fortuna possa assistere i pi� intraprendenti.
+## Risoluzione dei problemi
+La probabilità con cui il robot esce di pista è controllata principalmente dalla costante `SPEED_INCREASE`. Naturalmente, però, grante importanza è rivestita da come è stato progettato il circuito e, in particolare, dal raggio delle curve e dalla loro dislocazione. Nel caso quindi non si riesca ad ottenere l'effetto voluto (il robot esce di pista anche se `SPEED_INCREASE` è pari a 0, oppure non esce mai anche nel caso di valore massimo), è opportuno modificare il circuito oppure effettuare alcuni cambiamenti nel codice del programma.
 
-* `MAX_SPEED > 340` : il valore di "error_divider" * (linea 57) viene impostato uguale a 9. In questo modo il robot uscir� sicuramente dal circuito.
+## Licenza
+Questo programma è una versione modificata presso il Politecnico di Torino dell'esempio `line_following` fornito dalla Polulu insieme alle librerie per il robot Zumo. Le modifiche si concrentrano principalmente in:
 
-* (*) `error_divider` indica il valore derivativo nella formula che si trova alla linea 125. Pi� questo valore � alto meno il robot riesce a seguire le curve impegnative. Dunque se nel vostro circuito le curve non sono abbastanza strette da fare uscire il robot dal circuito allora agite su questo valore.
+1. Aggiunta della linea del traguardo e conteggio del numero di giri;
+2. Introduzione della possibilità, nel caso venga impostata una velocità troppo elevata, che il robot non riesca a percorrere le curve più impegnative ed esca di pista. 
+
+Vedere il file `LICENSE` per maggiori informazioni.
