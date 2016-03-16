@@ -4,6 +4,7 @@
 #include <Pushbutton.h>
 #include <ZumoBuzzer.h>
 
+//questi sono i parametri regolabili, ma non vi consiglio di toccarli durante l'evento per possibili effetti collaterali
 #define COMMANDS_NUM 12
 #define STRAIGHT_DURATION 500
 #define STRAIGHT_SPEED 200
