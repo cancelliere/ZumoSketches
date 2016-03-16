@@ -13,7 +13,7 @@ Lo sketch permette all'utente di programmare fisicamente il comportamento della 
 7. A questo punto si può iniziare a programmare la sequenza coprendo un singolo fotoresistore alla volta.
 8. Al raggiungimento del dodicesimo comando, la sequenza viene eseguita in automatico; alternativamente, in caso di una sequenza più corta, bisogna premere il tasto `PLAY`.
 
-# Parametri modificabili
+## Parametri modificabili
 Di seguito una spiegazione dei principali parametri modificabili dall'utente:
 
 * `COMMANDS_NUM`: massimo numero di comandi programmabili;
