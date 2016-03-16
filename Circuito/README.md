@@ -21,7 +21,7 @@ Il circuito di gara deve essere realizzato sovrapponendo una linea nera (larghez
 La probabilità con cui il robot esce di pista è controllata principalmente dalla costante `SPEED_INCREASE`. Naturalmente, però, grande importanza è rivestita da come è stato progettato il circuito e, in particolare, dal raggio delle curve e dalla loro dislocazione. Nel caso quindi non si riesca ad ottenere l'effetto voluto (il robot esce di pista anche se `SPEED_INCREASE` è pari a 0, oppure non esce mai anche nel caso di valore massimo), è opportuno modificare il circuito oppure effettuare alcuni cambiamenti nel codice del programma.
 
 ## Licenza
-Questo programma è una versione modificata presso il Politecnico di Torino dell'esempio `LineFollower` fornito dalla Polulu insieme alle librerie per il robot Zumo. Le modifiche si concentrano principalmente in:
+Questo programma è una versione modificata presso il Politecnico di Torino dell'esempio `LineFollower` fornito dalla Pololu insieme alle librerie per il robot Zumo. Le modifiche si concentrano principalmente in:
 
 * Aggiunta della linea del traguardo e conteggio del numero di giri;
 * Introduzione della possibilità, nel caso venga impostata una velocità troppo elevata, che il robot non riesca a percorrere le curve più impegnative ed esca di pista. 

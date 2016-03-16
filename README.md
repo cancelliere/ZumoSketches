@@ -10,10 +10,10 @@ Raccolta contenente i programmi per Arduino relativi al Robot Zumo, che verranno
 4. `Inseguitore`: il robot Zumo, equipaggiato con la board aggiuntiva, viene controllato mediante un fascio di luce.
 
 ## Componenti necessari
-1. Robot Zumo equipaggiato con il "Reflectance Sensor Array" ([Sito Web](http://www.polulu.com/zumo));
+1. Robot Zumo equipaggiato con il "Reflectance Sensor Array" ([Sito Web](http://www.pololu.com/zumo));
 2. Board aggiuntiva;
 3. I programmi di cui sopra;
-4. Raccolta di librerie fornite dalla Polulu stessa, liberamente scaricabili su [Github (zumo-shield)](https://github.com/polulu/zumo-shield) e [Github (l3g-arduino)](https://github.com/polulu/l3g-arduino).
+4. Raccolta di librerie fornite dalla Polulu stessa, liberamente scaricabili su [Github (zumo-shield)](https://github.com/pololu/zumo-shield) e [Github (l3g-arduino)](https://github.com/pololu/l3g-arduino).
 
 ## Licenza
 Per maggiori informazioni riguardanti la licenza con cui sono distribuiti i programmi di cui sopra, consultare il file `LICENSE` contenuto nelle rispettive directory.

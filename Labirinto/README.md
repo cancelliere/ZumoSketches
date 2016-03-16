@@ -19,4 +19,4 @@ Nel caso in cui il robot presenti comportamenti anomali, ovvero non riesca ed ef
 Se invece lo Zumo, una volta trovata correttamente l'uscita del labirinto, non riesce a percorre il percorso diretto, si rende necessario cambiare la dimensione del vettore `path`. Questo cambiamento è necessario se il labirinto è particolarmente esteso, ma la dimensione massima di tale array è limitata dalla memoria della scheda arduino.
 
 ## Licenza
-Questo programma è lo schema di esempio `MazeSolver` fornito dalla Polulu insieme alle librerie per il robot Zumo. Per maggiori informazioni relative alla licenza, vedere il file `LICENSE`.
+Questo programma è lo schema di esempio `MazeSolver` fornito dalla Pololu insieme alle librerie per il robot Zumo. Per maggiori informazioni relative alla licenza, vedere il file `LICENSE`.
