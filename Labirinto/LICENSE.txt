@@ -1,11 +1,3 @@
-This is a modified version by Politecnico di Torino of the  
-Demo LineFollower code for the Pololu Zumo Robot
-
-Below is reported the license from Polulu which 
-is intended as valid also for this version.
-
------------------------------------------------------------------
-
 Copyright (c) 2013 Pololu Corporation.  For more information, see
 
 http://www.pololu.com/

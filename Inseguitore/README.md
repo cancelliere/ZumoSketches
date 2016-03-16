@@ -1,26 +1,12 @@
-LIGHT CONTROL
-=============
+# Inseguitore
 
-Descrizione generale 
---------------------
-	Lo sketch permette di controllare il polizumo robot con un fascio di luce. 
-	Puntando la luce su una delle quattro fotoresistenze montate sul robot esso si muove. 
-	PuÛ andare avanti, indietro, destra e sinistra.
-	
-# Preparazione Polizumo
-Dopo aver montato lo shield con le fotoresistenze sul robot, rimosso l'array dei sensori di riflessione e compilato e caricato "LightControl.ino" sulla scheda Arduino alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore.Si accenderanno quattro led: due rossi e due blu. A questo punto bisogna procedere con la calibrazione delle fotoresistenze:
+## Descrizione Generale
+Lo sketch permette di controllare il robot Zumo con un fascio di luce: puntando la luce su una delle quattro fotoresistenze presenti sulla board aggiuntiva, esso si muove nella direzione relativa. Le direzioni ammesse sono: avanti, indietro, destra e sinistra.
 
-1. Posizionare lo zumo sul piano di utilizzo(se farete correre il vostro robot su un tavolo allora posizionarlo sul tavolo, altrimenti sul pavimento, e cosi via).
-2. Premere il pulsante di sinistra e allontanare subito la mano dalla scheda in modo tale da non fare ombra(avrete due secondi per fare ciÛ). Sentirete un beep che indica l'inizio della calibrazione, e un secondo beep e lo spegnimento del led 13 indicheranno la fine del procedimento.
-3. Se doveste spostare il vostro zumo dal tavolo al pavimento, oppure vi È un cambiamento di illuminazione, allora dovrete andare al passo 1.
+## Preparazione robot Zumo
+1. Dopo aver montato la board aggiuntiva con le fotoresistenze sul robot, rimosso l'array dei sensori di riflessione e compilato e caricato `Inseguitore.ino` sulla scheda Arduino, alimentare il robot agendo sull'interrutore ON/OFF montato sulla parte posteriore: si accenderanno quattro led: due rossi e due blu.
+2. Posizionare lo Zumo sul tavolo su cui esso verr√† utilizzato e procedere con la calibrazione dei sensori: premere il pulsante `PLAY` e allontanare subito la mano dalla board in modo tale da non fare ombra. Si sentir√† un beep che indica l'inizio della calibrazione, e un secondo beep e lo spegnimento del led arancione indicheranno la fine del procedimento. Nel caso si renda necessario spostare il robot su un altro piano di lavoro, oppure vi sia un cambiamento di illuminazione, √® necessario effettuare nuovamente la calibrazione dopo aver spento e riacceso il robot.
+3. Utilizzare una torcia con fascio spot per illuminare una delle fotoresistenze e controllare il robot a distanza.
 
-Durante la stesura del codice si È cercato di farlo in modo chiaro e semplice aggiungendo commenti dove 
-neccessario. Per meglio soddisfare le vostre esigenze leggete il codice e cambiate i parametri neccessari.
-
-# General Troubleshooting
-
-Se pi˙ di una resistenza si trova sotto il fascio di luce o per qualche motivo(calibrazione non corretta delle fotoresistenze o cambiamento della luminosit· del ambiente dove vi trovate) il polizumo rimane fermo e non risponder· ai vostri comandi. Se nessuno dei casi descritti sopra si verifica ma il robot presenta comunque un funzionamento anomalo controllare che la scheda con le fotoresistenze sia montata bene e che i pin siano correttamente inizializati nello sketch "LightControl.ino".
-	
-	
-	
-	
+## Risoluzione dei problemi
+Nel caso in cui pi√π di una resistenza si trovi sotto il fascio di luce, il robot rimarr√† fermo e non risponder√† ai comandi: in tal caso √® necessario porre la massima attenzione nell'orientare in modo corretto la torcia. Se il problema continua a manifestarsi, verificare che la calibrazione sia stata effettuata correttamente e provare a ripeterla dopo aver spento e riacceso il robot.
