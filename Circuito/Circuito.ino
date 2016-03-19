@@ -32,7 +32,7 @@ byte max_nerrors;
 byte laps;
 
 int lastError = 0;
-const int THRESH = 200;
+const int THRESH = 500;
 
 void setup()
 {
